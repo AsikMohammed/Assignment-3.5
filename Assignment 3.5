@@ -1,0 +1,14 @@
+High Availability of NameNode:
+
+Single Point Of Failure:
+     The NameNode is a single point of failure (SPOF) in an HDFS cluster. Each cluster has a single NameNode, and if that host or process became unavailable, the cluster as a whole is unavailable until the NameNode is either restarted or brought up on a new host. 
+     
+     The reasons for unavailability of NameNode can be:
+        1.) A planned event like maintenance work such has upgradation of software or hardware.
+        2.) It may also be due to an unplanned event where the NameNode crashes because of some reasons.
+      
+High Availability:
+      
+      1.) The concept of High Availability cluster was introduced in Hadoop 2.x to solve the single point of failure problem in Hadoop 1.x.
+      2.) HDFS Architecture follows Master/Slave Topology where NameNode acts as a master daemon and is responsible for managing other slave nodes called DataNodes. 
+      3.) This single Master Daemon or NameNode becomes a bottleneck.
