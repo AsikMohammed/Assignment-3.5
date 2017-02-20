@@ -1,7 +1,8 @@
 High Availability of NameNode:
 
 Single Point Of Failure:
-     The NameNode is a single point of failure (SPOF) in an HDFS cluster. Each cluster has a single NameNode, and if that host or process became unavailable, the cluster as a whole is unavailable until the NameNode is either restarted or brought up on a new host. 
+     The NameNode is a single point of failure (SPOF) in an HDFS cluster. Each cluster has a single NameNode, and if that host or process
+     became unavailable, the cluster as a whole is unavailable until the NameNode is either restarted or brought up on a new host. 
      
      The reasons for unavailability of NameNode can be:
         1.) A planned event like maintenance work such has upgradation of software or hardware.
@@ -10,5 +11,55 @@ Single Point Of Failure:
 High Availability:
       
       1.) The concept of High Availability cluster was introduced in Hadoop 2.x to solve the single point of failure problem in Hadoop 1.x.
-      2.) HDFS Architecture follows Master/Slave Topology where NameNode acts as a master daemon and is responsible for managing other slave nodes called DataNodes. 
+      2.) HDFS Architecture follows Master/Slave Topology where NameNode acts as a master daemon and is responsible for managing other 
+      slave nodes called DataNodes. 
       3.) This single Master Daemon or NameNode becomes a bottleneck.
+
+CheckPointing:
+             A Checkpoint Node was introduced to solve the drawbacks of the NameNode. The changes are just written to edits and not merged to 
+      fsimage during the runtime. If the NameNode runs for a while edits gets huge and the next startup will take even longer because more 
+      changes have to be applied to the state to determine the last state of the metadata.
+             The Checkpoint Node fetches periodically fsimage and edits from the NameNode and merges them. The resulting state is called checkpoint. 
+      After this is uploads the result to the NameNode. The NameNode’s primary responsibility is storing the HDFS namespace. This means 
+      things like the directory tree, file permissions, and the mapping of files to block IDs. It’s important that this metadata (and all 
+      changes to it) are safely persisted to stable storage for fault tolerance.
+
+HDFS Federation:
+              HDFS Federation improves the existing HDFS architecture through a clear separation of namespace and storage, enabling generic 
+       block storage layer. It enables support for multiple namespaces in the cluster to improve scalability and isolation. Federation also 
+       opens up the architecture, expanding the applicability of HDFS cluster to new implementations and use cases.
+              Hadoop federation allows scaling the name service horizontally. It uses several namenodes or namespaces which are independent 
+       of each other. These independent namenodes are federated.      
+
+Benefits of Hadoop Federation:
+        * Scalability and Isolation
+        * Simple Design
+        * Generic Storage Service 
+
+The configuration files that are to be edited while installing a hadoop cluster are :
+                        i) Core-site.xml
+                       ii) HDFS-site.xml
+                      iii) YARN-site.xml
+                       iv) mapred-site.xml
+      a) Settings that need to be done in Core-site.xml :-
+                            1.Configuring the name node address
+                            2.Configuring the rack awareness factor
+                            3.Selecting the type of security
+      b) Settings to be done in HDFS-site.xml :-
+                 The properties inside this xml file deals with storage procedure inside HDFS of Hadoop.
+                            1. Configure port access
+                            2. Manages ssl client authentication
+                            3. Controls Network interface
+                            4. Changes file permission  
+      c) Settings to be done in YARN-site.xml :-     
+                            1. WebAppProxy Configuration
+                            2. MapReduce Configuration
+                            3. NodeManager Configuration
+                            4. ResourceManager Configuration
+                            5. IPC Configuration
+      d) Settings to be done in mapred-site/xml :-
+                 This file is used to specify which MapReduce framework we are using. By default, Hadoop contains a template of 
+         yarn-site.xml.
+                 This file contains configuration information that overrides the default values for MapReduce parameters. Overrides 
+         of the default values for core configuration properties are stored in the Default mapred Parameters file.
+          
